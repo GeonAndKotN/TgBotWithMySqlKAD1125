@@ -27,8 +27,51 @@ namespace TgBotWithMySqlKAD1125
 
             var message = update.Message;
             conn.Open();
+
+            switch (update.CallbackQuery?.Data)
+            {
+                
+                case "WarSel":
+                    { //Как принимать от inline кнопок айди пользователя, или что мне с этим сделать
+                        string addclassWarrior = "SELECT user_id, class FROM Users WHERE user_id = @Id AND class = 'неопр'";
+                        using (MySqlCommand warrioradding = new MySqlCommand(addclassWarrior, conn))
+                        {
+                            warrioradding.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Id));
+                            using (MySqlDataReader GoWarriorGo = warrioradding.ExecuteReader())
+                            {
+                                if(GoWarriorGo.Read())
+                                {
+                                    string changeToWarrior = "UPDATE `bottgkursovaya`.`Users` SET `class` = 'Воин' WHERE user_id = @Id;";
+                                    using (MySqlCommand ChangeWar = new MySqlCommand(changeToWarrior, conn))
+                                    {
+                                        ChangeWar.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Id));
+                                        using (MySqlDataReader HeheChangeWarrior = ChangeWar.ExecuteReader())
+                                            HeheChangeWarrior.Read();
+                                    }
+                                    await client.SendTextMessageAsync(message.Chat.Id, "Отныне вы воин!");
+                                }
+                                else
+                                {
+                                    await client.SendTextMessageAsync(message.Chat.Id, "Зачем снова нажимать сюда :(");
+                                }
+                            }
+                        }
+                    }
+                    return;
+                case "BerSel":
+                    {
+                        Console.WriteLine($"Проверка БЕРСЕРК ");
+                    }
+                    return;
+                case "PalSel":
+                    {
+                        Console.WriteLine($"Проверка ПАЛЛАДИН от ");
+                    }
+                    return;
+            }
+
             //надо пофиксить так, чтобы принимался только текст и ничего более
-            switch (message?.Text?.ToLower())
+            switch (message?.Text?.ToLower() /*&& message.Text != null*/)
             {
                 case "/start":
                     {
@@ -94,15 +137,15 @@ namespace TgBotWithMySqlKAD1125
                                      {
                                          new []
                                          {
-                                             InlineKeyboardButton.WithCallbackData(text: "🗡️Воин🗡️", callbackData: "🗡️Воин🗡️"),
+                                             InlineKeyboardButton.WithCallbackData(text: "🗡️Воин🗡️", callbackData: "WarSel"),
                                          },
                                          new []
                                          {
-                                             InlineKeyboardButton.WithCallbackData(text: "\U0001fa93Берсерк\U0001fa93", callbackData: "\U0001fa93Берсерк\U0001fa93"),
+                                             InlineKeyboardButton.WithCallbackData(text: "\U0001fa93Берсерк\U0001fa93", callbackData: "BerSel"),
                                          },
                                          new []
                                          {
-                                             InlineKeyboardButton.WithCallbackData(text: "🛡️Паладин🛡️", callbackData: "🛡️Паладин🛡️"),
+                                             InlineKeyboardButton.WithCallbackData(text: "🛡️Паладин🛡️", callbackData: "PalSel"),
                                          },
                                      });
                                     await client.SendTextMessageAsync(message.Chat.Id, "Отлично, теперь можно приступить к выбору вашего класса!" +
