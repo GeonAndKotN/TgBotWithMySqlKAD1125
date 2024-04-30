@@ -21,8 +21,8 @@ namespace TgBotWithMySqlKAD1125
             // 6435067834:AAHD-49wIKSo6ooiN82c0FdMH5_JWogwpwA - бот для проверки
             // 7140884239:AAFMcWNsUnDo7rFrDQGRlpYovz1C0KewLIQ - основной бот
 
-            string connStr = "server=192.168.200.13;user=student;password=student;database=BotTgKursovaya";
-            //string connStr = "server=localhost;user=SuperKAD;database=bottgkursovaya;password=1234;";
+            //string connStr = "server=192.168.200.13;user=student;password=student;database=BotTgKursovaya";
+            string connStr = "server=localhost;user=SuperKAD;database=bottgkursovaya;password=1234;";
             MySqlConnection conn = new MySqlConnection(connStr);
 
 
@@ -55,7 +55,8 @@ namespace TgBotWithMySqlKAD1125
                                 }
                                 else
                                 {
-                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Зачем снова нажимать сюда :(");
+                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "У вас уже есть класс :(");
+                                    
                                 }
                             }
                         }
@@ -84,37 +85,36 @@ namespace TgBotWithMySqlKAD1125
                                 }
                                 else
                                 {
-                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Зачем снова нажимать сюда :(");
+                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "У вас уже есть класс :(");
                                 }
                             }
                         }
                     }
                     return;
-                    return;
                 case "PalSel":
                     { //Как принимать от inline кнопок айди пользователя, или что мне с этим сделать
-                        string addclassWarrior = "SELECT user_id, class FROM Users WHERE user_id = @Id AND class = 'неопр'";
-                        using (MySqlCommand warrioradding = new MySqlCommand(addclassWarrior, conn))
+                        string addclasspaladion = "SELECT user_id, class FROM Users WHERE user_id = @Id AND class = 'неопр'";
+                        using (MySqlCommand paladinadding = new MySqlCommand(addclasspaladion, conn))
                         {
-                            warrioradding.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Message.Chat.Id));
-                            using (MySqlDataReader GoWarriorGo = warrioradding.ExecuteReader())
+                            paladinadding.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Message.Chat.Id));
+                            using (MySqlDataReader GoPaladinGo = paladinadding.ExecuteReader())
                             {
-                                if (GoWarriorGo.Read())
+                                if (GoPaladinGo.Read())
                                 {
-                                    GoWarriorGo.Close();
-                                    string changeToWarrior = "UPDATE `BotTgKursovaya`.`Users` SET `class` = 'Воин' WHERE user_id = @Id;";
-                                    using (MySqlCommand ChangeWar = new MySqlCommand(changeToWarrior, conn))
+                                    GoPaladinGo.Close();
+                                    string changeToPall = "UPDATE `BotTgKursovaya`.`Users` SET `class` = 'Паладин' WHERE user_id = @Id;";
+                                    using (MySqlCommand ChangePal = new MySqlCommand(changeToPall, conn))
                                     {
-                                        ChangeWar.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Message.Chat.Id));
-                                        using (MySqlDataReader HeheChangeWarrior = ChangeWar.ExecuteReader())
-                                            HeheChangeWarrior.Read();
+                                        ChangePal.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Message.Chat.Id));
+                                        using (MySqlDataReader HeheChangePaladin = ChangePal.ExecuteReader())
+                                            HeheChangePaladin.Read();
                                     }
 
-                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Отныне вы воин!");
+                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Отныне вы паладин!");
                                 }
                                 else
                                 {
-                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Зачем снова нажимать сюда :(");
+                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "У вас уже есть класс :(");
                                 }
                             }
                         }
