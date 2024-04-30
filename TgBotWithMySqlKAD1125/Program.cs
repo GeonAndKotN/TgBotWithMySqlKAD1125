@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
+using System;
 
 namespace TgBotWithMySqlKAD1125
 {
@@ -43,15 +44,15 @@ namespace TgBotWithMySqlKAD1125
                                 if(GoWarriorGo.Read())
                                 {
                                     GoWarriorGo.Close();
-                                    string changeToWarrior = "UPDATE `BotTgKursovaya`.`Users` SET `class` = 'Воин' WHERE user_id = @Id;";
+                                    string changeToWarrior = "UPDATE `BotTgKursovaya`.`Users` SET `class` = 'воин', `location` = 'старт' WHERE user_id = @Id;";
                                     using (MySqlCommand ChangeWar = new MySqlCommand(changeToWarrior, conn))
                                     {
                                         ChangeWar.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Message.Chat.Id));
                                         using (MySqlDataReader HeheChangeWarrior = ChangeWar.ExecuteReader())
                                             HeheChangeWarrior.Read();
                                     }
-                                    
-                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Отныне вы воин!");
+
+                                    await client.SendPhotoAsync(update.CallbackQuery.Message.Chat.Id, InputFile.FromUri("https://raw.githubusercontent.com/GeonAndKotN/TgBotWithMySqlKAD1125/master/TgBotWithMySqlKAD1125/Image/WarriorImageMale.jpg"), caption: "Отныне вы воин!", cancellationToken: token);
                                 }
                                 else
                                 {
@@ -73,7 +74,7 @@ namespace TgBotWithMySqlKAD1125
                                 if (GoBerserkGo.Read())
                                 {
                                     GoBerserkGo.Close();
-                                    string changeToBerserk = "UPDATE `BotTgKursovaya`.`Users` SET `class` = 'Берсерк' WHERE user_id = @Id;";
+                                    string changeToBerserk = "UPDATE `BotTgKursovaya`.`Users` SET `class` = 'берсерк', `location` = 'старт' WHERE user_id = @Id;";
                                     using (MySqlCommand ChangeBer = new MySqlCommand(changeToBerserk, conn))
                                     {
                                         ChangeBer.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Message.Chat.Id));
@@ -81,7 +82,7 @@ namespace TgBotWithMySqlKAD1125
                                             HeheChangeBerserk.Read();
                                     }
 
-                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Отныне вы берсерк!");
+                                    await client.SendPhotoAsync(update.CallbackQuery.Message.Chat.Id, InputFile.FromUri("https://raw.githubusercontent.com/GeonAndKotN/TgBotWithMySqlKAD1125/master/TgBotWithMySqlKAD1125/Image/BerserkImageMale.jpg"), caption: "Отныне вы берсерк!", cancellationToken: token);
                                 }
                                 else
                                 {
@@ -102,7 +103,7 @@ namespace TgBotWithMySqlKAD1125
                                 if (GoPaladinGo.Read())
                                 {
                                     GoPaladinGo.Close();
-                                    string changeToPall = "UPDATE `BotTgKursovaya`.`Users` SET `class` = 'Паладин' WHERE user_id = @Id;";
+                                    string changeToPall = "UPDATE `BotTgKursovaya`.`Users` SET `class` = 'паладин', `location` = 'старт' WHERE user_id = @Id;";
                                     using (MySqlCommand ChangePal = new MySqlCommand(changeToPall, conn))
                                     {
                                         ChangePal.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Message.Chat.Id));
@@ -110,7 +111,7 @@ namespace TgBotWithMySqlKAD1125
                                             HeheChangePaladin.Read();
                                     }
 
-                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Отныне вы паладин!");
+                                    await client.SendPhotoAsync(update.CallbackQuery.Message.Chat.Id, InputFile.FromUri("https://raw.githubusercontent.com/GeonAndKotN/TgBotWithMySqlKAD1125/master/TgBotWithMySqlKAD1125/Image/PaladinImageMale.jpg"), caption: "Отныне вы паладин!", cancellationToken: token);
                                 }
                                 else
                                 {
