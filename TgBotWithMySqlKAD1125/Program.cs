@@ -20,8 +20,9 @@ namespace TgBotWithMySqlKAD1125
         {
             // 6435067834:AAHD-49wIKSo6ooiN82c0FdMH5_JWogwpwA - бот для проверки
             // 7140884239:AAFMcWNsUnDo7rFrDQGRlpYovz1C0KewLIQ - основной бот
-            //string connStr = "server=192.168.200.13;user=student;password=student;database=BotTgKursovaya";
-            string connStr = "server=localhost;user=SuperKAD;database=bottgkursovaya;password=1234;";
+
+            string connStr = "server=192.168.200.13;user=student;password=student;database=BotTgKursovaya";
+            //string connStr = "server=localhost;user=SuperKAD;database=bottgkursovaya;password=1234;";
             MySqlConnection conn = new MySqlConnection(connStr);
 
 
@@ -36,36 +37,87 @@ namespace TgBotWithMySqlKAD1125
                         string addclassWarrior = "SELECT user_id, class FROM Users WHERE user_id = @Id AND class = 'неопр'";
                         using (MySqlCommand warrioradding = new MySqlCommand(addclassWarrior, conn))
                         {
-                            warrioradding.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Id));
+                            warrioradding.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Message.Chat.Id));
                             using (MySqlDataReader GoWarriorGo = warrioradding.ExecuteReader())
                             {
                                 if(GoWarriorGo.Read())
                                 {
-                                    string changeToWarrior = "UPDATE `bottgkursovaya`.`Users` SET `class` = 'Воин' WHERE user_id = @Id;";
+                                    GoWarriorGo.Close();
+                                    string changeToWarrior = "UPDATE `BotTgKursovaya`.`Users` SET `class` = 'Воин' WHERE user_id = @Id;";
                                     using (MySqlCommand ChangeWar = new MySqlCommand(changeToWarrior, conn))
                                     {
-                                        ChangeWar.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Id));
+                                        ChangeWar.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Message.Chat.Id));
                                         using (MySqlDataReader HeheChangeWarrior = ChangeWar.ExecuteReader())
                                             HeheChangeWarrior.Read();
                                     }
-                                    await client.SendTextMessageAsync(message.Chat.Id, "Отныне вы воин!");
+                                    
+                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Отныне вы воин!");
                                 }
                                 else
                                 {
-                                    await client.SendTextMessageAsync(message.Chat.Id, "Зачем снова нажимать сюда :(");
+                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Зачем снова нажимать сюда :(");
                                 }
                             }
                         }
                     }
                     return;
                 case "BerSel":
-                    {
-                        Console.WriteLine($"Проверка БЕРСЕРК ");
+                    { //Как принимать от inline кнопок айди пользователя, или что мне с этим сделать
+                        string addclassBerserk = "SELECT user_id, class FROM Users WHERE user_id = @Id AND class = 'неопр'";
+                        using (MySqlCommand berserkadding = new MySqlCommand(addclassBerserk, conn))
+                        {
+                            berserkadding.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Message.Chat.Id));
+                            using (MySqlDataReader GoBerserkGo = berserkadding.ExecuteReader())
+                            {
+                                if (GoBerserkGo.Read())
+                                {
+                                    GoBerserkGo.Close();
+                                    string changeToBerserk = "UPDATE `BotTgKursovaya`.`Users` SET `class` = 'Берсерк' WHERE user_id = @Id;";
+                                    using (MySqlCommand ChangeBer = new MySqlCommand(changeToBerserk, conn))
+                                    {
+                                        ChangeBer.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Message.Chat.Id));
+                                        using (MySqlDataReader HeheChangeBerserk = ChangeBer.ExecuteReader())
+                                            HeheChangeBerserk.Read();
+                                    }
+
+                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Отныне вы берсерк!");
+                                }
+                                else
+                                {
+                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Зачем снова нажимать сюда :(");
+                                }
+                            }
+                        }
                     }
                     return;
+                    return;
                 case "PalSel":
-                    {
-                        Console.WriteLine($"Проверка ПАЛЛАДИН от ");
+                    { //Как принимать от inline кнопок айди пользователя, или что мне с этим сделать
+                        string addclassWarrior = "SELECT user_id, class FROM Users WHERE user_id = @Id AND class = 'неопр'";
+                        using (MySqlCommand warrioradding = new MySqlCommand(addclassWarrior, conn))
+                        {
+                            warrioradding.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Message.Chat.Id));
+                            using (MySqlDataReader GoWarriorGo = warrioradding.ExecuteReader())
+                            {
+                                if (GoWarriorGo.Read())
+                                {
+                                    GoWarriorGo.Close();
+                                    string changeToWarrior = "UPDATE `BotTgKursovaya`.`Users` SET `class` = 'Воин' WHERE user_id = @Id;";
+                                    using (MySqlCommand ChangeWar = new MySqlCommand(changeToWarrior, conn))
+                                    {
+                                        ChangeWar.Parameters.Add(new MySqlParameter("Id", update.CallbackQuery.Message.Chat.Id));
+                                        using (MySqlDataReader HeheChangeWarrior = ChangeWar.ExecuteReader())
+                                            HeheChangeWarrior.Read();
+                                    }
+
+                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Отныне вы воин!");
+                                }
+                                else
+                                {
+                                    await client.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, "Зачем снова нажимать сюда :(");
+                                }
+                            }
+                        }
                     }
                     return;
             }
@@ -113,7 +165,7 @@ namespace TgBotWithMySqlKAD1125
                     }
                 default:
                     {
-                        string checkname = "SELECT User_name from users where user_id = @Id and user_name = 'namegood';";
+                        string checkname = "SELECT User_name from Users where user_id = @Id and user_name = 'namegood';";
                         using (MySqlCommand checkn = new MySqlCommand(checkname, conn))
                         {
                             checkn.Parameters.Add(new MySqlParameter("Id", message.Chat.Id));
@@ -122,7 +174,7 @@ namespace TgBotWithMySqlKAD1125
                             {
                                 if (ChangeName.Read())
                                 {
-                                    string changename = "UPDATE `bottgkursovaya`.`users` SET `user_name` = @namems WHERE user_id = @Id;";
+                                    string changename = "UPDATE `BotTgKursovaya`.`Users` SET `user_name` = @namems WHERE user_id = @Id;";
                                     using (MySqlCommand namech = new MySqlCommand(changename, conn))
                                     {
                                         ChangeName.Close();
@@ -186,7 +238,7 @@ namespace TgBotWithMySqlKAD1125
         {
             Console.WriteLine(exception.Message);
             return;
-            //await client.SendPhotoAsync(exception.Message, InputFile.FromUri("https://raw.githubusercontent.com/GeonAndKotN/BotInTg/master/BotInTg/Photo/HahaErrorMan.png"), caption: "Упс, кажется возникла ошибка, сообщите в службу поддержки о баге!", cancellationToken: token);
+            await client.SendPhotoAsync(exception.Message, InputFile.FromUri("https://raw.githubusercontent.com/GeonAndKotN/BotInTg/master/BotInTg/Photo/HahaErrorMan.png"), caption: "Упс, кажется возникла ошибка, сообщите в службу поддержки о баге!", cancellationToken: token);
         }
     }    
 }
